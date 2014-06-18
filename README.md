@@ -1,15 +1,21 @@
 # Timeline App
 
 ## Installation
-- `git clone https://github.com/davidjnelson/timeline-tech-challenge/timeline-tech-challenge.git`
-- npm install
+```bash
+git clone https://github.com/davidjnelson/timeline-tech-challenge/timeline-tech-challenge.git
+npm install
+```
 
 ## Running local functional tests
-- gulp start-selenium (once)
-- gulp functional-test-local (repeatedly)
+```bash
+gulp start-selenium (once)
+gulp functional-test-local (repeatedly)
+```
 
 ## Running functional tests through sauce labs to test all supported browsers
-- gulp functional-test-all-browsers
+```
+gulp functional-test-all-browsers
+```
 
 ## Remaining nice to haves
 - actual app!
