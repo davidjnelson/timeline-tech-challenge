@@ -37,7 +37,15 @@ gulp.task('functional-test-local', function() {
     // TODO: find a way to pass data to gulp tasks that doesn't require globals
     global.functionalTestType = 'local';
 
-    gulp.watch(['tests/functional/specs/**/*.js'], ['execute-functional-tests']);
+    return gulp.src('tests/functional/specs/**/*.js')
+        .pipe(mocha({
+            reporter: 'spec',
+            timeout: 60000
+        })
+    );
+
+    // TODO: fix functional test watch - was working before...
+    //gulp.watch(['tests/functional/specs/**/*.js'], ['execute-functional-tests']);
 });
 
 gulp.task('functional-test-all-browsers', function() {

@@ -6,3 +6,43 @@ html, body {
     height: 100%;
     width: 100%;
 }
+
+#timeline-top-pane {
+    height: 75%;
+    text-align: center;
+}
+
+#timeline-bottom-pane {
+    height: 25%;
+    text-align: center;
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+#timeline-top-pane-text {
+    position: relative;
+    font-size: 50px;
+    height: 20%;
+    top: 40%;
+    bottom: 40%;
+    width: 30%;
+    left: 35%;
+    right: 35%;
+    vertical-align: middle;
+    color: darkslategrey;
+    font-family: helvetica, arial, freesans, clean, sans-serif;
+}
+
+#timeline-bottom-pane-text {
+    position: relative;
+    font-size: 30px;
+    height: 30%;
+    top: 35%;
+    bottom: 35%;
+    width: 20%;
+    left: 40%;
+    right: 40%;
+    vertical-align: middle;
+    color: darkslategray;
+    font-family: helvetica, arial, freesans, clean, sans-serif;
+}

@@ -10,6 +10,7 @@ requirejs.config({
     }
 });
 
-define(['views/TimelineView', 'jquery'], function (TimelineView, $) {
-    TimelineView.render($('body'));
+// TODO: make data come from a real service after writing a test for it
+define(['EntryPoint', 'text!json/TimelineData.json'], function (EntryPoint, TimelineData) {
+    EntryPoint.start(TimelineData);
 });
