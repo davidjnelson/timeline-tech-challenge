@@ -19,15 +19,12 @@ gulp functional-test-all-browsers
 
 ## Remaining nice to haves
 - actual app!
-- watch for changes and re-run functional tests
 - unit tests
 - concatenation and minification with source maps
-- module loading
 - linting
 - code coverage analysis
 - deployment to s3 with cloudfront backing
 - version increments on build
-- watch for changes and re-run unit tests
 - configure chrome windows and linux as well as the currently configured chrome osx
 - deploy to continuous integration
 - re run functional tests after deployment
