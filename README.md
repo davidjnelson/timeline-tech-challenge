@@ -32,3 +32,6 @@ gulp functional-test-all-browsers
 - deploy to continuous integration
 - re run functional tests after deployment
 - make chrome launch for the local functional tests instead of being set to IE and launching firefox
+- make specs not need to end in Spec.js
+- share requirejs paths between test-main and main.js
+- consider switching integration tests to mocha due to better async support
