@@ -17,6 +17,12 @@ gulp functional-test-local (repeatedly)
 gulp functional-test-all-browsers
 ```
 
+## Documentation on the selenium wire protocol
+https://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/element/:id/text
+
+## Documentation on webdriver for functional tests which uses the selenium wire protocol
+https://github.com/admc/wd/blob/master/doc/api.md
+
 ## Running integration tests
 ```bash
 karma start
