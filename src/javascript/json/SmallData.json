@@ -1,0 +1,43 @@
+{
+    "firstName" : "Chip",
+    "lastName" : "Bitly",
+    "age" : 0.00046,
+    "events" : [
+        {
+            "age": 0.00000,
+            "content": "was born"
+        },
+        {
+            "age": 0.00004,
+            "content": "learned to ride a bike"
+        },
+        {
+            "age": 0.00012,
+            "content": "was successfully potty trained"
+        },
+        {
+            "age": 0.00017,
+            "content": "got his first job"
+        },
+        {
+            "age": 0.00021,
+            "content": "graduated valedictorian"
+        },
+        {
+            "age": 0.00027,
+            "content": "got married to a person"
+        },
+        {
+            "age": 0.00032,
+            "content": "became the father of some people"
+        },
+        {
+            "age": 0.00037,
+            "content": "got stuck in a well"
+        },
+        {
+            "age": 0.00042,
+            "content": "turned 42 years old"
+        }
+    ]
+}

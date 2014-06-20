@@ -12,10 +12,17 @@ html, body {
     text-align: center;
 }
 
+.timeline-bottom-pane-unclicked {
+    background-color: lightgray;
+}
+
+.timeline-bottom-pane-clicked {
+    background-color: gray;
+}
+
 #timeline-bottom-pane {
     height: 25%;
     text-align: center;
-    background-color: lightgray;
     cursor: pointer;
 }
 
@@ -25,9 +32,9 @@ html, body {
     height: 20%;
     top: 40%;
     bottom: 40%;
-    width: 30%;
-    left: 35%;
-    right: 35%;
+    width: 60%;
+    left: 20%;
+    right: 20%;
     vertical-align: middle;
     color: darkslategrey;
     font-family: helvetica, arial, freesans, clean, sans-serif;

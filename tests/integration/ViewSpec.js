@@ -1,38 +1,44 @@
-define(['EntryPoint', 'text!json/TimelineData.json', 'jquery'], function(EntryPoint, TimelineData, $) {
+define(['EntryPoint', 'text!json/SmallData.json', 'jquery'], function(EntryPoint, SmallData, $) {
     describe('View', function () {
+        var cssLoaded = false,
+            // five decimal places is precise enough.
+            convertToLessPrecision = function(number) {
+                return parseFloat(number.toFixed(5));
+            },
+            getRectangleHeight = function(id) {
+                // jquery has a bug which rounds up computed css, hence using getBoundingClientRect
+                return convertToLessPrecision(document.getElementById(id).getBoundingClientRect().height);
+            },
+            getRectangleWidth = function(id) {
+                return convertToLessPrecision(document.getElementById(id).getBoundingClientRect().width);
+            },
+            getViewportHeight = function() {
+                return convertToLessPrecision(parseFloat(window.getComputedStyle(document.getElementsByTagName('body')[0],null).height));
+            };
+
+        // mocha and jasmine 2 have much better async support.  consider switching.
+        beforeEach(function() {
+            $('head').append('<link rel="stylesheet" id="timeline-css" href="/base/src/css/timeline.css"" type="text/css" />');
+
+            var loadCss = setInterval(function(){
+                if($('#timeline-css').length){
+                    clearInterval(loadCss);
+                    cssLoaded = true;
+                }
+            }, 5); // retry every 5 milliseconds seconds to see if it's loaded
+
+            EntryPoint.start(SmallData);
+        });
+
         describe('when the application loads', function () {
             describe('the timeline-container div', function () {
-                var cssLoaded = false,
-                    getRectangleHeight = function(id) {
-                        // jquery has a bug which rounds up computed css, hence using getBoundingClientRect
-                        return document.getElementById(id).getBoundingClientRect().height;
-                    },
-                    getRectangleWidth = function(id) {
-                        return document.getElementById(id).getBoundingClientRect().width;
-                    };
-
-                // mocha and jasmine 2 have much better async support.  consider switching.
-                beforeEach(function() {
-                    $('head').append('<link rel="stylesheet" id="timeline-css" href="/base/src/css/timeline.css"" type="text/css" />');
-
-                    var loadCss = setInterval(function(){
-                        if($('#timeline-css').length){
-                            clearInterval(loadCss);
-                            cssLoaded = true;
-                        }
-                    }, 5); // retry every 5 milliseconds seconds to see if it's loaded
-
-                    EntryPoint.start(TimelineData);
-                });
-
                 it('should have the same height as the viewport', function () {
                     waitsFor(function() {
                         return cssLoaded;
                     }, "the css to load");
 
                     runs(function () {
-                        expect(getRectangleHeight('timeline-container')).toEqual(
-                            parseFloat(window.getComputedStyle(document.getElementsByTagName('body')[0],null).height));
+                        expect(getRectangleHeight('timeline-container')).toEqual(getViewportHeight());
                     });
                 });
 
@@ -42,7 +48,7 @@ define(['EntryPoint', 'text!json/TimelineData.json', 'jquery'], function(EntryPo
                     }, "the css to load");
 
                     runs(function () {
-                        var seventyFivePercentOfContainerHeight = getRectangleHeight('timeline-container') * .75;
+                        var seventyFivePercentOfContainerHeight = convertToLessPrecision(getRectangleHeight('timeline-container') * .75);
                         expect(getRectangleHeight('timeline-top-pane')).toEqual(seventyFivePercentOfContainerHeight);
                         expect(getRectangleWidth('timeline-top-pane')).toEqual(getRectangleWidth('timeline-container'));
                     });
@@ -54,7 +60,7 @@ define(['EntryPoint', 'text!json/TimelineData.json', 'jquery'], function(EntryPo
                     }, "the css to load");
 
                     runs(function () {
-                        var twentyFivePercentOfContainerHeight = getRectangleHeight('timeline-container') * .25;
+                        var twentyFivePercentOfContainerHeight = convertToLessPrecision(getRectangleHeight('timeline-container') * .25);
                         expect(getRectangleHeight('timeline-bottom-pane')).toEqual(twentyFivePercentOfContainerHeight);
                         expect(getRectangleWidth('timeline-bottom-pane')).toEqual(getRectangleWidth('timeline-container'));
                     });
@@ -67,11 +73,37 @@ define(['EntryPoint', 'text!json/TimelineData.json', 'jquery'], function(EntryPo
                 it('should have a second child div with the text "play"', function() {
                     expect($('#timeline-bottom-pane-text').text()).toEqual('play');
                 });
+            });
+        });
 
-                afterEach(function() {
-                    $('body').empty();
+        describe('when the play button is clicked', function() {
+            beforeEach(function() {
+                $('#timeline-bottom-pane').click();
+            });
+            describe('the bottom pane text', function() {
+                it('should change to the word "pause', function() {
+                    expect($('#timeline-bottom-pane-text').text()).toEqual('pause');
                 });
-            })
-        })
+            });
+
+            describe('the top pane text', function() {
+                it('should say "at age 0, Chip was born"', function() {
+                    expect($('#timeline-top-pane-text').text()).toEqual('at age 0, Chip was born');
+                });
+            });
+
+            describe('after 80 microseconds', function() {
+                describe('the top pane text', function() {
+                    it('should say "at age 0.00012, Chip was successfully potty trained"', function() {
+                        expect($('#timeline-top-pane-text').text())
+                            .toEqual('at age 0.00012, Chip was successfully potty trained');
+                    });
+                });
+            });
+        });
+    });
+
+    afterEach(function() {
+        $('body').empty();
     });
 });
