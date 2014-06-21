@@ -7,6 +7,12 @@ html, body {
     width: 100%;
 }
 
+/*
+#timeline-debug-pane {
+    height: 25%;
+}
+*/
+
 #timeline-top-pane {
     height: 75%;
     text-align: center;
