@@ -44,7 +44,6 @@ http://localhost:9877/debug.html
 It is _very_ important not to open any other tabs in the window karma is running in, or the tests will run slowly.
 
 ## Remaining nice to haves I would do with more time
-- complete the actual app!
 - complete the integration tests
 - add more functional tests.  I was using the approach of writing failing functional tests first, then filling them
 in with failing integration then unit tests.  Due to the learning curve of the functional testing tools and since the
