@@ -53,13 +53,29 @@ define(['text!json/SmallData.json', 'testing/TestTools', 'chai', 'jquery'], func
                 });
 
                 describe('the bottom pane text', function () {
-                    it('should say: "restart', function (done) {
+                    it('should say: "restart"', function (done) {
                         $('#timeline-bottom-pane').click();
 
                         setTimeout(function() {
                             expect($('#timeline-bottom-pane-text').text()).to.equal('restart');
 
                             done();
+                        }, 1000);
+                    });
+                });
+
+                describe('after clicking the restart button, the top pane text', function() {
+                    it('should say: "at age 0, Chip was born"', function(done) {
+                        this.timeout(2000);
+                        $('#timeline-bottom-pane').click();
+
+                        setTimeout(function() {
+                            $('#timeline-bottom-pane').click();
+
+                            setTimeout(function() {
+                                expect($('#timeline-top-pane-text').text()).to.equal('at age 0, Chip was born');
+                                done();
+                            }, 20);
                         }, 1000);
                     });
                 });

@@ -74,8 +74,7 @@ has value.  However, the learning curve must be mitigated for it to be a success
 at the precision of microseconds.
 - write an ajax service to fetch the json instead of inlining it during the build using the requirejs text plugin.
     in the ajax service, include a loading indicator, error handling with retry, with integration tests for both.
-- write integration tests for: when restart is clicked the
-animation restarts, that the animation pauses when the pause button is pressed, that the bottom pane changes
+- write integration tests for: that the animation pauses when the pause button is pressed, that the bottom pane changes
 to play when pause is pressed, when bottom pane button is pressed while paused, that play resumes, when
 play resumes, only the delta of the playback time for that event minus the elapsed time for that event is animated
 - consider make getTotalPlaybackTime private.  go through all code and looks for methods which should be private.
@@ -84,6 +83,8 @@ to do that enough.
 - see if there is redundant code in the click handler and the start playing method.  I've been doing
 tdd using "red, green, refactor", but ran out of time before the refactor stage.
 - see if there's an opportunity to split another class out of TimelineModel.  it's getting too big.
+- get the unit and integration tests running in under 200 milliseconds.  use requestAnimationFrame in the tests
+themselves too, because setInterval is not precise enough there either.
 
 ## Notes
 - I wanted to write this in es6 and cross compile it with traceur, but I felt that was outside the scope of the
