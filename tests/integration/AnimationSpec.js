@@ -25,6 +25,40 @@ define(['text!json/SmallData.json', 'testing/TestTools', 'chai', 'jquery'], func
                 });
             });
 
+            describe('after 20 milliseconds', function() {
+                describe('the pause button is clicked', function() {
+                    describe('the bottom pane text', function () {
+                        it('should change to the word: "play"', function (done) {
+                            $('#timeline-bottom-pane').click();
+
+                            setTimeout(function () {
+                                $('#timeline-bottom-pane').click();
+
+                                expect($('#timeline-bottom-pane-text').text()).to.equal('play');
+                                done();
+                            }, 20);
+                        });
+                    });
+
+                    describe('after 100 milliseconds', function() {
+                        describe('the top pane text', function() {
+                            it('should say: "at age 0, Chip was born"', function (done) {
+                                $('#timeline-bottom-pane').click();
+
+                                setTimeout(function() {
+                                    $('#timeline-bottom-pane').click();
+
+                                    setTimeout(function () {
+                                        expect($('#timeline-top-pane-text').text()).to.equal('at age 0, Chip was born');
+                                        done();
+                                    }, 100);
+                                }, 20);
+                            });
+                        });
+                    })
+                });
+            });
+
             describe('after 100 milliseconds', function () {
                 describe('the top pane text', function () {
                     it('should say: "at age .04, Chip learned to ride a bike"', function (done) {
