@@ -2,6 +2,7 @@ define(['text!templates/TimelineViewTemplate.html', 'jquery'], function(Timeline
     var _timelineModel,
         _parentElement,
         _templatedRendered = false,
+        _loadedEventHandler,
         // no need for a templating engine here as we're just replacing two values
         _updateTemplate = function() {
             if(_templatedRendered) {
@@ -22,6 +23,10 @@ define(['text!templates/TimelineViewTemplate.html', 'jquery'], function(Timeline
                 _parentElement.append(updatedTemplate);
                 _wireBottomPaneClick();
                 _templatedRendered = true;
+
+                if(_loadedEventHandler) {
+                    _loadedEventHandler();
+                }
             }
         },
         _getBottomPaneText = function() {
@@ -41,7 +46,8 @@ define(['text!templates/TimelineViewTemplate.html', 'jquery'], function(Timeline
         _getTopPaneText = function() {
             switch(_timelineModel.getPlayerState()) {
                 case _timelineModel.PLAYING:
-                case _timelineModel.COMPLETED: {
+                case _timelineModel.COMPLETED:
+                case _timelineModel.PAUSED: {
                     return 'at age ' + _timelineModel.getAgeForCurrentEvent() + ', ' + _timelineModel.getFirstName() + ' ' +
                         _timelineModel.getActivityForAge(_timelineModel.getAgeForCurrentEvent());
                 }
@@ -74,15 +80,21 @@ define(['text!templates/TimelineViewTemplate.html', 'jquery'], function(Timeline
         _handleModelEvents = function(eventData) {
             _updateTemplate();
         },
-        TimelineView = function (parentElement, timelineModel) {
+        TimelineView = function (parentElement, timelineModel, loadedEventHandler) {
             _timelineModel = timelineModel;
             _parentElement = parentElement;
             _timelineModel.handleModelEvents(_handleModelEvents);
+            _loadedEventHandler = loadedEventHandler;
         };
 
     TimelineView.prototype.render = function() {
         _updateTemplate();
-    }
+    };
+
+    TimelineView.prototype.destroy = function() {
+        _parentElement.empty();
+        _templatedRendered = false;
+    };
 
     return TimelineView;
 });

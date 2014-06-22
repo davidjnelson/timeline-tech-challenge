@@ -70,7 +70,6 @@ has value.  However, the learning curve must be mitigated for it to be a success
 - add integration test for click color changing
 - organize the code into components instead of putting all models in one models directory etc.
 - use more precision for the floating point numbers used during testing
-- code reuse for a few test helper functions
 - finish the unit tests for the TimelineModel to ensure that all the timings are occuring, and that they are occuring
 at the precision of microseconds.
 - write an ajax service to fetch the json instead of inlining it during the build using the requirejs text plugin.
@@ -83,7 +82,6 @@ play resumes, only the delta of the playback time for that event minus the elaps
 - consider make getTotalPlaybackTime private.  go through all code and looks for methods which should be private.
 - review all the code, look for ways to clean it up further and simplify it.  short on time so haven't had the chance
 to do that enough.
-- change this.STATES constants to TimelineModel.STATES for all usages
 - see if there is redundant code in the click handler and the start playing method.  I've been doing
 tdd using "red, green, refactor", but ran out of time before the refactor stage.
 - see if there's an opportunity to split another class out of TimelineModel.  it's getting too big.
