@@ -38,6 +38,32 @@ define(['text!json/SmallData.json', 'testing/TestTools', 'chai', 'jquery'], func
                     });
                 });
             });
+
+            describe('after 1 second', function () {
+                describe('the top pane text', function () {
+                    it('should say: "at age 0.42, Chip turned 42 years old"', function (done) {
+                        $('#timeline-bottom-pane').click();
+
+                        setTimeout(function() {
+                            expect($('#timeline-top-pane-text').text()).to.equal('at age 0.42, Chip turned 42 years old');
+
+                            done();
+                        }, 1000);
+                    });
+                });
+
+                describe('the bottom pane text', function () {
+                    it('should say: "restart', function (done) {
+                        $('#timeline-bottom-pane').click();
+
+                        setTimeout(function() {
+                            expect($('#timeline-bottom-pane-text').text()).to.equal('restart');
+
+                            done();
+                        }, 1000);
+                    });
+                });
+            });
         });
 
         afterEach(function() {

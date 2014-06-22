@@ -74,8 +74,7 @@ has value.  However, the learning curve must be mitigated for it to be a success
 at the precision of microseconds.
 - write an ajax service to fetch the json instead of inlining it during the build using the requirejs text plugin.
     in the ajax service, include a loading indicator, error handling with retry, with integration tests for both.
-- write integration tests for: validating that the animation ends when all events have finished playing,
-validating that the bottom pane text says 'restart' when all events have finished playing, when restart is clicked the
+- write integration tests for: when restart is clicked the
 animation restarts, that the animation pauses when the pause button is pressed, that the bottom pane changes
 to play when pause is pressed, when bottom pane button is pressed while paused, that play resumes, when
 play resumes, only the delta of the playback time for that event minus the elapsed time for that event is animated
