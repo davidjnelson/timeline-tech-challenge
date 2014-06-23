@@ -32,7 +32,7 @@ https://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/ele
 ## Documentation on webdriver for functional tests which uses the selenium wire protocol
 https://github.com/admc/wd/blob/master/doc/api.md
 
-## Running integration tests
+## Running integration and unit tests
 ```bash
 karma start
 ```
