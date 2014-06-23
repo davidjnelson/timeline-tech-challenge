@@ -2,7 +2,7 @@
 
 ## Installation
 ```bash
-git clone https://github.com/davidjnelson/timeline-tech-challenge/timeline-tech-challenge.git
+git clone https://github.com/davidjnelson/timeline-tech-challenge.git
 npm install
 ```
 
