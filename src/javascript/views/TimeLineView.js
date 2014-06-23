@@ -1,5 +1,6 @@
 define(['text!templates/TimelineViewTemplate.html', 'shared/MicrosecondTimer', 'jquery'], function(TimelineViewTemplate, MicrosecondTimer, $) {
     var _timelineModel,
+        _timelineData,
         _parentElement,
         _templatedRendered = false,
         _loadedEventHandler,
@@ -40,11 +41,11 @@ define(['text!templates/TimelineViewTemplate.html', 'shared/MicrosecondTimer', '
                 case _timelineModel.PLAYING:
                 case _timelineModel.COMPLETED:
                 case _timelineModel.PAUSED: {
-                    return 'at age ' + _timelineModel.getAgeForCurrentEvent() + ', ' + _timelineModel.getFirstName() + ' ' +
-                        _timelineModel.getActivityForAge(_timelineModel.getAgeForCurrentEvent());
+                    return 'at age ' + _timelineModel.getCurrentEventAge() + ', ' + _timelineData.getFirstName() + ' ' +
+                        _timelineData.getActivityForAge(_timelineModel.getCurrentEventAge());
                 }
                 case _timelineModel.NOT_STARTED: {
-                    return _timelineModel.getFullName();
+                    return _timelineData.getFullName();
                 }
             }
         },
@@ -66,11 +67,12 @@ define(['text!templates/TimelineViewTemplate.html', 'shared/MicrosecondTimer', '
         _handleModelEvents = function(eventData) {
             _updateTemplate();
         },
-        TimelineView = function (parentElement, timelineModel, loadedEventHandler) {
+        TimelineView = function (parentElement, timelineModel, loadedEventHandler, timelineData) {
             _timelineModel = timelineModel;
             _parentElement = parentElement;
             _timelineModel.handleModelEvents(_handleModelEvents);
             _loadedEventHandler = loadedEventHandler;
+            _timelineData = timelineData;
         };
 
     TimelineView.prototype.render = function() {

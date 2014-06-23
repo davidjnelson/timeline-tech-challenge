@@ -2,6 +2,7 @@
 
 define([], function() {
     var _timelineModel,
+        _timelineData,
         _modelEventHandler,
         _processedEvents = {},
         _currentEventAge = 0,
@@ -13,13 +14,6 @@ define([], function() {
         _needToProcessPause = false,
         _howLongAnimationWasPaused = 0,
         _playerState,
-        _safeParseJson = function(json) {
-            if(typeof json === 'object') {
-                return json;
-            }
-
-            return JSON.parse(json);
-        },
         _currentTimeInSeconds = function() {
             return performance.now() / 1000;
         },
@@ -32,8 +26,8 @@ define([], function() {
 
             // convert to seconds, but keep the microsecond precision
             var currentTime = _currentTimeInSeconds(),
-                animationStartTime = TimelineModel.prototype.getCurrentEventAnimationStartTime(),
-                howLongToShowEvent = TimelineModel.prototype.getPlaybackTimeForAge(TimelineModel.prototype.getAgeForCurrentEvent()),
+                animationStartTime = _timelineData.getAnimationStartTimeByAge(_currentEventAge),
+                howLongToShowEvent = _timelineData.getPlaybackTimeForAge(_currentEventAge),
                 animationElapsedTime,
                 timeThisEventShouldShow,
                 timeSinceEventStarted;
@@ -45,8 +39,8 @@ define([], function() {
             }
 
             animationElapsedTime = currentTime - _howLongAnimationWasPaused - animationStartTime;
-            timeThisEventShouldShow = TimelineModel.prototype.getPlaybackTimeForAge(TimelineModel.prototype.getAgeForCurrentEvent());
-            timeSinceEventStarted = _currentTimeInSeconds() - _processedEvents[_currentEventAge].animationStartTime;
+            timeThisEventShouldShow = _timelineData.getPlaybackTimeForAge(_currentEventAge);
+            timeSinceEventStarted = _currentTimeInSeconds() - _timelineData.getAnimationStartTimeByAge(_currentEventAge);
 
             if(_needToProcessPause && (_howLongAnimationWasPaused + timeSinceEventStarted > timeThisEventShouldShow)) {
                 TimelineModel.prototype.moveToNextEvent();
@@ -61,49 +55,7 @@ define([], function() {
         _startTimer = function() {
             _timerLoop();
         },
-        _calculatePlaybackTimeForEachAge = function() {
-            /*
-             the algorithm:
-             --------------
-             playback start = 2 * age at event
-             playback end = 2 * next age
-             playback time = playback end - playback start (except for the last entry)
-             playback time for the last entry = current age * 2 - playback start
-             */
-
-            var i = 0,
-                eventCount = _timelineModel.events.length,
-                eventCountMinusOne = eventCount - 1,
-                playbackStart = 0,
-                playbackEnd = 0,
-                playbackTime = 0,
-                lastEventPlaybackTime = 0,
-                internalProcessedEvents = {};
-
-            for(i; i < eventCount; i++) {
-                playbackStart = 2 * _timelineModel.events[i].age;
-
-                if(i < eventCountMinusOne) {
-                    playbackEnd = 2 * _timelineModel.events[i + 1].age;
-                    playbackTime = playbackEnd - playbackStart;
-
-                    internalProcessedEvents[_timelineModel.events[i].age] = {
-                        playbackTime: playbackTime,
-                        activity: _timelineModel.events[i].content
-                    };
-                } else {
-                    lastEventPlaybackTime = _timelineModel.age * 2 - playbackStart;
-
-                    internalProcessedEvents[_timelineModel.events[i].age] = {
-                        playbackTime: lastEventPlaybackTime,
-                        activity: _timelineModel.events[i].content
-                    };
-                }
-            }
-
-            return internalProcessedEvents;
-        },
-        TimelineModel = function(timelineServerData) {
+        TimelineModel = function(timelineServerData, timelineData) {
             _modelEventHandler = null;
             _currentEventAge = 0,
             _howManySecondsAfterPageLoadDidLastPauseOccur = 0,
@@ -114,16 +66,11 @@ define([], function() {
             _needToProcessPause = false,
             _howLongAnimationWasPaused = 0,
             _playerState = TimelineModel.prototype.NOT_STARTED;
-            _timelineModel = _safeParseJson(timelineServerData);
-            _processedEvents = _calculatePlaybackTimeForEachAge();
+            _timelineData = timelineData;
         };
 
     TimelineModel.prototype.getPlayerState = function() {
         return _playerState;
-    };
-
-    TimelineModel.prototype.getFullName = function() {
-        return _timelineModel.firstName + ' ' + _timelineModel.lastName;
     };
 
     TimelineModel.prototype.handleModelEvents = function(modelEventHandler) {
@@ -139,9 +86,9 @@ define([], function() {
                         _timeAtFirstPlay = _currentTimeInSeconds();
                         _needToProcessPause = false;
                         _howManySecondsAfterPageLoadDidLastPlayOccur = _currentTimeInSeconds();
-                        _currentEventAge = _timelineModel.events[0].age;
+                        _currentEventAge = _timelineData.getEventAgeByIndex(0);
                         _playerState = requestedState;
-                        _processedEvents[_currentEventAge].animationStartTime = _currentTimeInSeconds();
+                        _timelineData.setAnimationStartTimeByAge(_currentEventAge, _currentTimeInSeconds());
 
                         _startTimer();
                     }
@@ -178,41 +125,17 @@ define([], function() {
         }
     };
 
-    TimelineModel.prototype.getTotalPlaybackTime = function() {
-        return _timelineModel.age * 2;
-    };
-
-    TimelineModel.prototype.getPlaybackTimeForAge = function(age) {
-        return _processedEvents[age].playbackTime;
-    };
-
-    TimelineModel.prototype.getAge = function() {
-        return _timelineModel.age;
-    };
-
-    TimelineModel.prototype.getFirstName = function() {
-        return _timelineModel.firstName;
-    };
-
-    TimelineModel.prototype.getActivityForAge = function(age) {
-        return _processedEvents[age].activity;
-    };
-
-    TimelineModel.prototype.getAgeForCurrentEvent = function() {
+    TimelineModel.prototype.getCurrentEventAge = function() {
         return _currentEventAge;
     };
 
-    TimelineModel.prototype.getCurrentEventAnimationStartTime = function() {
-        return _processedEvents[_currentEventAge].animationStartTime;
-    };
-
     TimelineModel.prototype.moveToNextEvent = function() {
-        for(var i = 0; i < _timelineModel.events.length; i++) {
-            if((i + 1) === _timelineModel.events.length) {
+        for(var i = 0; i < _timelineData.getEvents().length; i++) {
+            if((i + 1) === _timelineData.getEvents().length) {
                 _playerState = TimelineModel.prototype.COMPLETED;
-            } else if (_timelineModel.events[i].age === _currentEventAge) {
-                _currentEventAge = _timelineModel.events[i + 1].age;
-                _processedEvents[_currentEventAge].animationStartTime = _currentTimeInSeconds();
+            } else if (_timelineData.getEvents()[i].age === _currentEventAge) {
+                _currentEventAge = _timelineData.getEvents()[i + 1].age;
+                _timelineData.setAnimationStartTimeByAge(_currentEventAge, _currentTimeInSeconds());
                 _howLongAnimationWasPaused = 0;
                 _howManySecondsAfterPageLoadDidLastPauseOccur = _currentTimeInSeconds();
                 return true;

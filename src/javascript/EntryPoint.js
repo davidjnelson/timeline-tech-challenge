@@ -1,13 +1,16 @@
 'use strict';
 
-define(['views/TimelineView', 'models/TimelineModel', 'jquery'], function(TimelineView, TimelineModel, $) {
+define(['views/TimelineView', 'models/TimelineData', 'models/TimelineModel', 'jquery'],
+    function(TimelineView, TimelineData, TimelineModel, $) {
     var timelineView,
-        timelineModel;
+        timelineModel,
+        timelineData;
 
     return {
-        start: function(TimelineData, loadedEventHandler) {
-            timelineModel = new TimelineModel(TimelineData);
-            timelineView = new TimelineView($('body'), timelineModel, loadedEventHandler);
+        start: function(ServerData, loadedEventHandler) {
+            timelineData = new TimelineData(ServerData);
+            timelineModel = new TimelineModel(ServerData, timelineData);
+            timelineView = new TimelineView($('body'), timelineModel, loadedEventHandler, timelineData);
             timelineView.render();
         },
         stop: function() {
