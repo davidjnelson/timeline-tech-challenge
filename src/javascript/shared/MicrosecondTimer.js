@@ -1,10 +1,10 @@
 'use strict';
 
 define([], function () {
+    // this timer is like setTimeout, except that it can process as fast as 200 microseconds
     var _completedCallback,
         _millisecondsToWait,
         _millisecondsSinceTimerStarted,
-    // TODO: get this down to the microsecond precision level.  as is, it's no better than setTimeout.
         _timerLoop = function (millisecondsSincePageLoaded) {
             if (performance.now() >= (_millisecondsSinceTimerStarted + _millisecondsToWait)) {
                 _completedCallback();
