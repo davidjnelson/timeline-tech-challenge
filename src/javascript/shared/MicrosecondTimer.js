@@ -1,26 +1,26 @@
 define([], function () {
-    var _microsecondSetTimeoutCompletedCallback,
-        _microsecondSetTimeoutMillisecondsToWait,
-        _millisecondsSinceTestStarted,
+    var _completedCallback,
+        _millisecondsToWait,
+        _millisecondsSinceTimerStarted,
     // TODO: get this down to the microsecond precision level.  as is, it's no better than setTimeout.
         _timerLoop = function (millisecondsSincePageLoaded) {
-            if (performance.now() >= (_millisecondsSinceTestStarted + _microsecondSetTimeoutMillisecondsToWait)) {
-                _microsecondSetTimeoutCompletedCallback();
+            if (performance.now() >= (_millisecondsSinceTimerStarted + _millisecondsToWait)) {
+                _completedCallback();
             } else {
                 requestAnimationFrame(_timerLoop);
             }
         },
         _microsecondSetTimeout = function (completedCallback, millisecondsToWait) {
-            _millisecondsSinceTestStarted = performance.now();
+            _millisecondsSinceTimerStarted = performance.now();
             _timerLoop();
         };
     var MicrosecondTimer = function (completedCallback, millisecondsToWait) {
-        _microsecondSetTimeoutCompletedCallback = completedCallback;
-        _microsecondSetTimeoutMillisecondsToWait = millisecondsToWait;
+        _completedCallback = completedCallback;
+        _millisecondsToWait = millisecondsToWait;
     };
 
     MicrosecondTimer.prototype.execute = function() {
-        _microsecondSetTimeout(_microsecondSetTimeoutCompletedCallback, _microsecondSetTimeoutMillisecondsToWait);
+        _microsecondSetTimeout(_completedCallback, _millisecondsToWait);
     };
 
     return MicrosecondTimer;

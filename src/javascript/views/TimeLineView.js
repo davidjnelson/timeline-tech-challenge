@@ -8,14 +8,6 @@ define(['text!templates/TimelineViewTemplate.html', 'shared/MicrosecondTimer', '
             if(_templatedRendered) {
                 $('#timeline-top-pane-text').text(_getTopPaneText());
                 $('#timeline-bottom-pane-text').text(_getBottomPaneText());
-                $('#time-since-first-play').text(_timelineModel.timeSinceFirstPlay);
-                $('#time-since-last-pause').text(_timelineModel.timeSinceLastPause);
-                $('#time-since-last-resume').text(_timelineModel.timeSinceLastResume);
-                $('#time-since-page-load').text(_timelineModel.timeSincePageLoad);
-                $('#time-this-event-should-show').text(_timelineModel.timeThisEventShouldShow);
-                $('#time-since-event-started').text(_timelineModel.timeSinceEventStarted);
-                $('#howLongAnimationWasPaused').text(_timelineModel.howLongAnimationWasPaused);
-
             } else {
                 var updatedTemplate = TimelineViewTemplate.replace('%%TOP_PANE_TEXT%%', _getTopPaneText())
                     .replace('%%BOTTOM_PANE_TEXT%%', _getBottomPaneText());
@@ -67,13 +59,7 @@ define(['text!templates/TimelineViewTemplate.html', 'shared/MicrosecondTimer', '
         },
         _wireBottomPaneClick = function() {
             $('#timeline-bottom-pane').click(function () {
-                if(_timelineModel.getPlayerState() === _timelineModel.NOT_STARTED ||
-                    _timelineModel.getPlayerState() === _timelineModel.COMPLETED ||
-                    _timelineModel.getPlayerState() === _timelineModel.PAUSED) {
-                    _timelineModel.changePlayerState(_timelineModel.PLAYING);
-                } else if(_timelineModel.getPlayerState() === _timelineModel.PLAYING) {
-                    _timelineModel.changePlayerState(_timelineModel.PAUSED);
-                }
+                _timelineModel.togglePlayingPaused();
                 _showclickedAnimation();
             });
         },
