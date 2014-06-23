@@ -1,7 +1,5 @@
-/**
- * This is entry-point for testing with karma-runner and requirejs
- * based on sinpped from: http://karma-runner.github.io/0.8/plus/RequireJS.html
- */
+'use strict';
+
 (function() {
 
     var specFiles = null;

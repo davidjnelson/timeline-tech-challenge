@@ -1,3 +1,5 @@
+'use strict';
+
 define(['text!components/timeline/TimelineData.json', 'testing/TestTools', 'shared/MicrosecondTimer', 'chai', 'jquery'],
     function(Data, TestTools, MicrosecondTimer, chai, $) {
     var expect = chai.expect,

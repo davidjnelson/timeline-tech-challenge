@@ -1,3 +1,5 @@
+'use strict';
+
 define([], function() {
     var _timelineData,
         _safeParseJson = function(json) {

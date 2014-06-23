@@ -1,4 +1,6 @@
-define(['text!components/timeline/TimelineViewTemplate.html', '../../shared/MicrosecondTimer', 'jquery'], function(TimelineViewTemplate, MicrosecondTimer, $) {
+'use strict';
+
+define(['text!components/timeline/TimelineViewTemplate.html', 'shared/MicrosecondTimer', 'jquery'], function(TimelineViewTemplate, MicrosecondTimer, $) {
     var _timelineModel,
         _timelineData,
         _parentElement,

@@ -1,3 +1,5 @@
+'use strict';
+
 var FunctionalTester = require('../local/FunctionalTester'),
     FunctionalTestConfig = require('../local/LocalFunctionalTestConfig'),
     SauceFunctionalTester = require('../all-browsers/SauceFunctionalTester'),

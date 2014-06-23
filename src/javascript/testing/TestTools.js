@@ -1,3 +1,5 @@
+'use strict';
+
 define(['EntryPoint'], function(EntryPoint) {
     var cssLoaded = false,
         templatedRendered = false;
