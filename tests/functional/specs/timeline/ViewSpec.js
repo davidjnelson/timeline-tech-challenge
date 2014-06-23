@@ -1,6 +1,6 @@
 'use strict';
 
-var FunctionalTesterFactory = require('../shared/FunctionalTesterFactory');
+var FunctionalTesterFactory = require('../../shared/FunctionalTesterFactory');
 
 describe('view', function() {
     var allTestsPassed = true,
