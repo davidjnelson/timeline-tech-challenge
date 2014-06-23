@@ -1,4 +1,4 @@
-define(['text!templates/TimelineViewTemplate.html', 'jquery'], function(TimelineViewTemplate, $) {
+define(['text!templates/TimelineViewTemplate.html', 'shared/MicrosecondTimer', 'jquery'], function(TimelineViewTemplate, MicrosecondTimer, $) {
     var _timelineModel,
         _parentElement,
         _templatedRendered = false,
@@ -60,10 +60,10 @@ define(['text!templates/TimelineViewTemplate.html', 'jquery'], function(Timeline
             $('#timeline-bottom-pane').toggleClass('timeline-bottom-pane-unclicked');
             $('#timeline-bottom-pane').addClass('timeline-bottom-pane-clicked');
 
-            setTimeout(function() {
+            new MicrosecondTimer(function() {
                 $('#timeline-bottom-pane').removeClass('timeline-bottom-pane-clicked');
                 $('#timeline-bottom-pane').addClass('timeline-bottom-pane-unclicked');
-            }, 100);
+            }, 100).execute();
         },
         _wireBottomPaneClick = function() {
             $('#timeline-bottom-pane').click(function () {
