@@ -1,7 +1,7 @@
 'use strict';
 
 define(['text!components/timeline/TimelineViewTemplate.html', 'shared/MicrosecondTimer', 'jquery'], function(TimelineViewTemplate, MicrosecondTimer, $) {
-    var _timelineModel,
+    var _timelinePlayer,
         _timelineData,
         _parentElement,
         _templatedRendered = false,
@@ -25,28 +25,28 @@ define(['text!components/timeline/TimelineViewTemplate.html', 'shared/Microsecon
             }
         },
         _getBottomPaneText = function() {
-            switch(_timelineModel.getPlayerState()) {
-                case _timelineModel.NOT_STARTED:
-                case _timelineModel.PAUSED: {
+            switch(_timelinePlayer.getPlayerState()) {
+                case _timelinePlayer.NOT_STARTED:
+                case _timelinePlayer.PAUSED: {
                     return 'play';
                 }
-                case _timelineModel.PLAYING: {
+                case _timelinePlayer.PLAYING: {
                     return 'pause';
                 }
-                case _timelineModel.COMPLETED: {
+                case _timelinePlayer.COMPLETED: {
                     return 'restart';
                 }
             }
         },
         _getTopPaneText = function() {
-            switch(_timelineModel.getPlayerState()) {
-                case _timelineModel.PLAYING:
-                case _timelineModel.COMPLETED:
-                case _timelineModel.PAUSED: {
-                    return 'at age ' + _timelineModel.getCurrentEventAge() + ', ' + _timelineData.getFirstName() + ' ' +
-                        _timelineData.getActivityForAge(_timelineModel.getCurrentEventAge());
+            switch(_timelinePlayer.getPlayerState()) {
+                case _timelinePlayer.PLAYING:
+                case _timelinePlayer.COMPLETED:
+                case _timelinePlayer.PAUSED: {
+                    return 'at age ' + _timelinePlayer.getCurrentEventAge() + ', ' + _timelineData.getFirstName() + ' ' +
+                        _timelineData.getActivityForAge(_timelinePlayer.getCurrentEventAge());
                 }
-                case _timelineModel.NOT_STARTED: {
+                case _timelinePlayer.NOT_STARTED: {
                     return _timelineData.getFullName();
                 }
             }
@@ -62,17 +62,17 @@ define(['text!components/timeline/TimelineViewTemplate.html', 'shared/Microsecon
         },
         _wireBottomPaneClick = function() {
             $('#timeline-bottom-pane').click(function () {
-                _timelineModel.togglePlayingPaused();
+                _timelinePlayer.togglePlayingPaused();
                 _showclickedAnimation();
             });
         },
         _handleModelEvents = function(eventData) {
             _updateTemplate();
         },
-        TimelineView = function (parentElement, timelineModel, loadedEventHandler, timelineData) {
-            _timelineModel = timelineModel;
+        TimelineView = function (parentElement, timelinePlayer, loadedEventHandler, timelineData) {
+            _timelinePlayer = timelinePlayer;
             _parentElement = parentElement;
-            _timelineModel.handleModelEvents(_handleModelEvents);
+            _timelinePlayer.handleModelEvents(_handleModelEvents);
             _loadedEventHandler = loadedEventHandler;
             _timelineData = timelineData;
         };

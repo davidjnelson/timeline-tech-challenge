@@ -3,46 +3,45 @@
 define([], function() {
     var _timelineData,
         _modelEventHandler,
-        _processedEvents = {},
         _currentEventAge = 0,
         _howManySecondsAfterPageLoadDidLastPauseOccur = 0,
         _howManySecondsAfterPageLoadDidLastResumeOccur = 0,
         _howManySecondsAfterPageLoadDidLastPlayOccur = 0,
         _timeAtFirstPlay = 0,
-        _needToProcessPause = false,
         _howLongAnimationWasPaused = 0,
         _playerState,
         _currentTimeInSeconds = function() {
             return performance.now() / 1000;
         },
-        _timerLoop = function(timeFromRequestAnimationFrame) {
+        _calculateHowLongAnimationWasPaused = function() {
+            if(_howManySecondsAfterPageLoadDidLastResumeOccur > _howManySecondsAfterPageLoadDidLastPauseOccur) {
+                _howLongAnimationWasPaused = _howManySecondsAfterPageLoadDidLastResumeOccur - _howManySecondsAfterPageLoadDidLastPauseOccur;
+            }
+        },
+        _calculateAnimationElapsedTime = function() {
+            return _currentTimeInSeconds() - _howLongAnimationWasPaused - _timelineData.getAnimationStartTimeByAge(_currentEventAge);
+        },
+        _shouldMoveToNextevent = function() {
+            _calculateHowLongAnimationWasPaused();
+
+            // convert to seconds, but keep the microsecond precision
+            var howLongToShowEvent = _timelineData.getPlaybackTimeForAge(_currentEventAge),
+                animationElapsedTime = _calculateAnimationElapsedTime();
+
             // using 'TimelinePlayer.prototype' instead of 'this' so that I can have private members
             if(_playerState === TimelinePlayer.prototype.PLAYING) {
                 // using requestAnimationFrame and performance.now instead of setinterval for microsecond precision
                 requestAnimationFrame(_timerLoop);
             }
 
-            // convert to seconds, but keep the microsecond precision
-            var currentTime = _currentTimeInSeconds(),
-                animationStartTime = _timelineData.getAnimationStartTimeByAge(_currentEventAge),
-                howLongToShowEvent = _timelineData.getPlaybackTimeForAge(_currentEventAge),
-                animationElapsedTime,
-                timeThisEventShouldShow,
-                timeSinceEventStarted;
-
-            if(_howManySecondsAfterPageLoadDidLastResumeOccur > _howManySecondsAfterPageLoadDidLastPauseOccur) {
-                _howLongAnimationWasPaused = _howManySecondsAfterPageLoadDidLastResumeOccur - _howManySecondsAfterPageLoadDidLastPauseOccur;
-            } else {
-                _howLongAnimationWasPaused = 0;
+            if(animationElapsedTime > howLongToShowEvent) {
+                return true;
             }
 
-            animationElapsedTime = currentTime - _howLongAnimationWasPaused - animationStartTime;
-            timeThisEventShouldShow = _timelineData.getPlaybackTimeForAge(_currentEventAge);
-            timeSinceEventStarted = _currentTimeInSeconds() - _timelineData.getAnimationStartTimeByAge(_currentEventAge);
-
-            if(_needToProcessPause && (_howLongAnimationWasPaused + timeSinceEventStarted > timeThisEventShouldShow)) {
-                TimelinePlayer.prototype.moveToNextEvent();
-            } else if(animationElapsedTime > howLongToShowEvent) {
+            return false;
+        },
+        _timerLoop = function() {
+            if(_shouldMoveToNextevent()) {
                 TimelinePlayer.prototype.moveToNextEvent();
             }
 
@@ -54,15 +53,6 @@ define([], function() {
             _timerLoop();
         },
         TimelinePlayer = function(timelineServerData, timelineData) {
-            _modelEventHandler = null;
-            _currentEventAge = 0,
-            _howManySecondsAfterPageLoadDidLastPauseOccur = 0,
-            _needToProcessPause = false,
-            _howManySecondsAfterPageLoadDidLastResumeOccur = 0,
-            _howManySecondsAfterPageLoadDidLastPlayOccur = 0,
-            _timeAtFirstPlay = 0,
-            _needToProcessPause = false,
-            _howLongAnimationWasPaused = 0,
             _playerState = TimelinePlayer.prototype.NOT_STARTED;
             _timelineData = timelineData;
         };
@@ -82,38 +72,26 @@ define([], function() {
                     case TimelinePlayer.prototype.NOT_STARTED:
                     case TimelinePlayer.prototype.COMPLETED: {
                         _timeAtFirstPlay = _currentTimeInSeconds();
-                        _needToProcessPause = false;
                         _howManySecondsAfterPageLoadDidLastPlayOccur = _currentTimeInSeconds();
                         _currentEventAge = _timelineData.getEventAgeByIndex(0);
-                        _playerState = requestedState;
                         _timelineData.setAnimationStartTimeByAge(_currentEventAge, _currentTimeInSeconds());
-
-                        _startTimer();
                     }
-                    case TimelinePlayer.prototype.PAUSED: {
-
-                    }
-                }
-            }
-            case TimelinePlayer.prototype.COMPLETED: {
-                if(_playerState === TimelinePlayer.prototype.PLAYING && requestedState === TimelinePlayer.prototype.COMPLETED) {
-                    _needToProcessPause = false;
-                    _playerState = TimelinePlayer.prototype.COMPLETED;
                 }
             }
             case TimelinePlayer.prototype.PAUSED: {
                 if(_playerState === TimelinePlayer.prototype.PLAYING) {
-                    _playerState = TimelinePlayer.prototype.PAUSED;
-                    _needToProcessPause = true;
                     _howManySecondsAfterPageLoadDidLastPauseOccur = _currentTimeInSeconds();
                 }
             }
         }
 
-        if(_playerState === TimelinePlayer.prototype.PAUSED && requestedState === TimelinePlayer.prototype.PLAYING) {
-            _needToProcessPause = false;
-            _playerState = TimelinePlayer.prototype.PLAYING;
+        if(_playerState === TimelinePlayer.prototype.PAUSED) {
             _howManySecondsAfterPageLoadDidLastResumeOccur = _currentTimeInSeconds();
+        }
+
+        _playerState = requestedState;
+
+        if(requestedState === TimelinePlayer.prototype.PLAYING) {
             _startTimer();
         }
 
@@ -160,5 +138,3 @@ define([], function() {
 
     return TimelinePlayer;
 });
-
-// time this event started - how long it paused
