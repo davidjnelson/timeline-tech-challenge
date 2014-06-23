@@ -1,4 +1,4 @@
-define(['text!json/TimelineData.json', 'testing/TestTools', 'shared/MicrosecondTimer', 'chai', 'jquery'],
+define(['text!components/timeline/TimelineData.json', 'testing/TestTools', 'shared/MicrosecondTimer', 'chai', 'jquery'],
     function(Data, TestTools, MicrosecondTimer, chai, $) {
     var expect = chai.expect,
         // divide the ages and milliseconds to run to make the tests run faster

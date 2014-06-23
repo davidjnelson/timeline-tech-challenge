@@ -44,11 +44,10 @@ http://localhost:9877/debug.html
 It is _very_ important not to open any other tabs in the window karma is running in, or the tests will run slowly.
 
 ## Remaining nice to haves I would do with more time
-- complete the integration tests
 - add more functional tests.  I was using the approach of writing failing functional tests first, then filling them
-in with failing integration then unit tests.  Due to the learning curve of the functional testing tools and since the
-recruiter said that time was of the essence, I stopped writing functional tests altogether.  I do believe this approach
-has value.  However, the learning curve must be mitigated for it to be a successful approach.
+in with failing integration then unit tests.  Due to the learning curve of the functional testing tools, I stopped
+writing functional tests altogether.  I do believe this approach has value.  However, the learning curve must be
+mitigated for it to be a successful approach.
 - add unit tests to check for xss, boundary conditions, etc.
 - concatenation and minification with source maps using r.js
 - linting
@@ -59,27 +58,17 @@ has value.  However, the learning curve must be mitigated for it to be a success
 - configure chrome windows and linux as well as the currently configured chrome osx
 - deploy to continuous integration
 - re run functional tests after deployment
-- make chrome launch for the local functional tests instead of being set to IE and launching firefox
+- make chrome launch for the local functional tests instead of launching firefox
 - make specs not need to end in Spec.js
 - share requirejs paths between test-main and main.js
-- consider switching integration tests to mocha due to better async support and unit tests to mocha for consistency
 - consider adding tests for horizontally centered the two text nodes
 - add media queries and/or javascript to adjust the font sizes as the viewport shrinks and expands, for mobile especially
 - add a test for the mouse cursor to turn into the hand icon when you roll over the action button
 - fix functional test watch - was working before...
 - add integration test for click color changing
-- organize the code into components instead of putting all models in one models directory etc.
-- use more precision for the floating point numbers used during testing
 - write an ajax service to fetch the json instead of inlining it during the build using the requirejs text plugin.
     in the ajax service, include a loading indicator, error handling with retry, with integration tests for both.
-- consider make getTotalPlaybackTime private.  go through all code and looks for methods which should be private.
-- review all the code, look for ways to clean it up further and simplify it.  short on time so haven't had the chance
-to do that enough.
-- see if there is redundant code in the click handler and the start playing method.  I've been doing
-tdd using "red, green, refactor", but ran out of time before the refactor stage.
-- see if there's an opportunity to split another class out of TimelineModel.  it's getting too big.
-- get the unit and integration tests running in under 200 milliseconds.  use requestAnimationFrame in the tests
-themselves too, because setInterval is not precise enough there either.
+- get the unit and integration tests running in under 200 milliseconds.
 - figure out why karma, when in watch mode, does not pass the tests 100% of the time.  when run from the browser in
 the debug view, it works 100% of the time.  After restarting karma, it fixes it.  When karma is run in
 continuous integration mode, where it starts chrome and karma each time it runs the tests, they pass 100% of the time.
@@ -92,11 +81,3 @@ tools for the job.
 - I realized I was spending far too much time getting the functional tests working, so I punted on that and focused
 instead on the integration tests, unit tests, and application itself in the interest of time.  I could have finished
 this much faster had I skipped the functional test tooling setup and functional test implementation completely.
-- I ran out of time to write integration and unit tests for some aspects of the project.  See the
-"write integration tests for: " section above in the "Remaining nice to haves I would do with more time".
-- The code is working but is currently a total mess.  I need to go through and clean it up tremendously.  It shouldn't
-take too long to clean up, but it's late and I need some sleep.  I'd like to work on it a bit more tomorrow if that
-is cool with everybody.
-- While getting the code working I broke the integration tests I had written using TDD.  I need to fix these still in
-addition to adding other ones that I mention above.  What I'd really like to do is finish all the tests, then
-fearlessly refactor and clean up the code.  I just need a little more time.

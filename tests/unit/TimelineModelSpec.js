@@ -1,6 +1,6 @@
 'use strict';
 
-define(['models/TimelineData', 'text!json/TimelineData.json', 'chai'], function(TimelineData, TimelineServerData, chai) {
+define(['components/timeline/TimelineData', 'text!components/timeline/TimelineData.json', 'chai'], function(TimelineData, TimelineServerData, chai) {
     var expect = chai.expect,
         timelineData;
 

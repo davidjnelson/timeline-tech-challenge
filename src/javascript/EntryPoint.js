@@ -1,6 +1,6 @@
 'use strict';
 
-define(['views/TimelineView', 'models/TimelineData', 'models/TimelineModel', 'jquery'],
+define(['components/timeline/TimelineView', 'components/timeline/TimelineData', 'components/timeline/TimelineModel', 'jquery'],
     function(TimelineView, TimelineData, TimelineModel, $) {
     var timelineView,
         timelineModel,

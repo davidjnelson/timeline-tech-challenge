@@ -1,4 +1,4 @@
-define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], function(TimelineData, TestTools, chai, $) {
+define(['text!components/timeline/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], function(TimelineData, TestTools, chai, $) {
     var expect = chai.expect;
 
     describe('Layout', function () {
