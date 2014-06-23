@@ -1,9 +1,9 @@
-define(['text!json/SmallData.json', 'testing/TestTools', 'chai', 'jquery'], function(SmallData, TestTools, chai, $) {
+define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], function(TimelineData, TestTools, chai, $) {
     var expect = chai.expect;
 
     describe('Layout', function () {
         beforeEach(function(done) {
-            TestTools.loadTestFixtures(SmallData, function() {
+            TestTools.loadTestFixtures(TimelineData, function() {
                 done();
             });
         });

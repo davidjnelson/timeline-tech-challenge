@@ -78,7 +78,8 @@ define([], function() {
                 playbackStart = 0,
                 playbackEnd = 0,
                 playbackTime = 0,
-                lastEventPlaybackTime;
+                lastEventPlaybackTime = 0,
+                internalProcessedEvents = {};
 
             for(i; i < eventCount; i++) {
                 playbackStart = 2 * _timelineModel.events[i].age;
@@ -87,24 +88,35 @@ define([], function() {
                     playbackEnd = 2 * _timelineModel.events[i + 1].age;
                     playbackTime = playbackEnd - playbackStart;
 
-                    _processedEvents[_timelineModel.events[i].age] = {
+                    internalProcessedEvents[_timelineModel.events[i].age] = {
                         playbackTime: playbackTime,
                         activity: _timelineModel.events[i].content
                     };
                 } else {
                     lastEventPlaybackTime = _timelineModel.age * 2 - playbackStart;
 
-                    _processedEvents[_timelineModel.events[i].age] = {
+                    internalProcessedEvents[_timelineModel.events[i].age] = {
                         playbackTime: lastEventPlaybackTime,
                         activity: _timelineModel.events[i].content
                     };
                 }
             }
+
+            return internalProcessedEvents;
         },
         TimelineModel = function(timelineServerData) {
-                _playerState = TimelineModel.prototype.NOT_STARTED;
-                _timelineModel = JSON.parse(timelineServerData);
-                _calculatePlaybackTimeForEachAge();
+            _modelEventHandler = null;
+            _currentEventAge = 0,
+            _howManySecondsAfterPageLoadDidLastPauseOccur = 0,
+            _needToProcessPause = false,
+            _howManySecondsAfterPageLoadDidLastResumeOccur = 0,
+            _howManySecondsAfterPageLoadDidLastPlayOccur = 0,
+            _timeAtFirstPlay = 0,
+            _needToProcessPause = false,
+            _howLongAnimationWasPaused = 0,
+            _playerState = TimelineModel.prototype.NOT_STARTED;
+            _timelineModel = JSON.parse(timelineServerData);
+            _processedEvents = _calculatePlaybackTimeForEachAge();
         };
 
     TimelineModel.prototype.getPlayerState = function() {

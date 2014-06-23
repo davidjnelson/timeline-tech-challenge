@@ -70,8 +70,6 @@ has value.  However, the learning curve must be mitigated for it to be a success
 - add integration test for click color changing
 - organize the code into components instead of putting all models in one models directory etc.
 - use more precision for the floating point numbers used during testing
-- finish the unit tests for the TimelineModel to ensure that all the timings are occuring, and that they are occuring
-at the precision of microseconds.
 - write an ajax service to fetch the json instead of inlining it during the build using the requirejs text plugin.
     in the ajax service, include a loading indicator, error handling with retry, with integration tests for both.
 - write integration tests for: when play resumes, only the delta of the playback time for that event minus the elapsed
