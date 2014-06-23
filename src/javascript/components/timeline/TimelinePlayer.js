@@ -28,19 +28,19 @@ define([], function() {
             var howLongToShowEvent = _timelineData.getPlaybackTimeForAge(_currentEventAge),
                 animationElapsedTime = _calculateAnimationElapsedTime();
 
-            // using 'TimelinePlayer.prototype' instead of 'this' so that I can have private members
-            if(_playerState === TimelinePlayer.prototype.PLAYING) {
-                // using requestAnimationFrame and performance.now instead of setinterval for microsecond precision
-                requestAnimationFrame(_timerLoop);
-            }
-
             if(animationElapsedTime > howLongToShowEvent) {
                 return true;
             }
 
             return false;
         },
-        _timerLoop = function() {
+        _startTimer = function() {
+            // using 'TimelinePlayer.prototype' instead of 'this' so that I can have private members
+            if(_playerState === TimelinePlayer.prototype.PLAYING) {
+                // using requestAnimationFrame and performance.now instead of setinterval for microsecond precision
+                requestAnimationFrame(_startTimer);
+            }
+
             if(_shouldMoveToNextevent()) {
                 TimelinePlayer.prototype.moveToNextEvent();
             }
@@ -49,10 +49,7 @@ define([], function() {
                 _modelEventHandler();
             }
         },
-        _startTimer = function() {
-            _timerLoop();
-        },
-        TimelinePlayer = function(timelineServerData, timelineData) {
+        TimelinePlayer = function(timelineData) {
             _playerState = TimelinePlayer.prototype.NOT_STARTED;
             _timelineData = timelineData;
         };
