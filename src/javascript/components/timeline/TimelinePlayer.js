@@ -6,7 +6,6 @@ define([], function() {
         _processedEvents = {},
         _currentEventAge = 0,
         _howManySecondsAfterPageLoadDidLastPauseOccur = 0,
-        _needToProcessPause = false,
         _howManySecondsAfterPageLoadDidLastResumeOccur = 0,
         _howManySecondsAfterPageLoadDidLastPlayOccur = 0,
         _timeAtFirstPlay = 0,
