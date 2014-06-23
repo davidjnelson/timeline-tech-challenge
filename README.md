@@ -5,6 +5,7 @@
 git clone https://github.com/davidjnelson/timeline-tech-challenge.git
 cd timeline-tech-challenge
 npm install
+bower install
 ```
 
 ## Running the app
