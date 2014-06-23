@@ -20,6 +20,23 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
         },
         secondsToMillisecondsFormatted = function(seconds) {
             return secondsToMilliseconds(seconds).toString() + ' milliseconds';
+        },
+        _microsecondSetTimeoutCompletedCallback,
+        _microsecondSetTimeoutMillisecondsToWait,
+        _millisecondsSinceTestStarted,
+    // TODO: get this down to the microsecond precision level.  as is, it's no better than setTimeout.
+        timerLoop = function(millisecondsSincePageLoaded) {
+            if(performance.now() >= (_millisecondsSinceTestStarted + _microsecondSetTimeoutMillisecondsToWait)) {
+                _microsecondSetTimeoutCompletedCallback();
+            } else {
+                requestAnimationFrame(timerLoop);
+            }
+        },
+        microsecondSetTimeout = function(completedCallback, millisecondsToWait) {
+            _microsecondSetTimeoutCompletedCallback = completedCallback;
+            _microsecondSetTimeoutMillisecondsToWait = millisecondsToWait;
+            _millisecondsSinceTestStarted = performance.now();
+            timerLoop();
         };
 
     reduceTestDataByTestSpeedDivisor();
@@ -65,17 +82,17 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
                                             $('#timeline-bottom-pane').click();
 
                                             // wait 10,0000 milliseconds
-                                            setTimeout(function() {
+                                            microsecondSetTimeout(function() {
                                                 // click pause
                                                 $('#timeline-bottom-pane').click();
 
                                                 // wait 20,0000 milliseconds
-                                                setTimeout(function () {
+                                                microsecondSetTimeout(function () {
                                                     // click play
                                                     $('#timeline-bottom-pane').click();
 
                                                     // wait 8000 milliseconds
-                                                    setTimeout(function() {
+                                                    microsecondSetTimeout(function() {
                                                         expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
                                                             reduceTestedAgesByTestSpeedDivisor(4) + ', Chip learned to ride a bike');
                                                         done();
@@ -96,7 +113,7 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
                             it('should change to the word: "play"', function (done) {
                                 $('#timeline-bottom-pane').click();
 
-                                setTimeout(function () {
+                                microsecondSetTimeout(function () {
                                     $('#timeline-bottom-pane').click();
 
                                     expect($('#timeline-bottom-pane-text').text()).to.equal('play');
@@ -115,12 +132,12 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
                                     $('#timeline-bottom-pane').click();
 
                                     // wait 2,000 milliseconds
-                                    setTimeout(function() {
+                                    microsecondSetTimeout(function() {
                                         // click pause
                                         $('#timeline-bottom-pane').click();
 
                                         // wait 10,000 milliseconds
-                                        setTimeout(function () {
+                                        microsecondSetTimeout(function () {
                                             expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
                                                 reduceTestedAgesByTestSpeedDivisor(0) + ', Chip was born');
                                             done();
@@ -137,17 +154,17 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
                                         $('#timeline-bottom-pane').click();
 
                                         // wait 2 seconds
-                                        setTimeout(function() {
+                                        microsecondSetTimeout(function() {
                                             // click pause.  6 seconds remaining for the first animation.
                                             $('#timeline-bottom-pane').click();
 
                                             // wait 10 seconds.  still 6 seconds remaining for the first animation.
-                                            setTimeout(function () {
+                                            microsecondSetTimeout(function () {
                                                 // click play
                                                 $('#timeline-bottom-pane').click();
 
                                                 // wait 8 seconds.  second animation triggered 2 seconds ago.
-                                                setTimeout(function() {
+                                                microsecondSetTimeout(function() {
                                                     expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
                                                         reduceTestedAgesByTestSpeedDivisor(4) + ', Chip learned to ride a bike');
                                                     done();
@@ -167,7 +184,7 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
                             ', Chip learned to ride a bike"', function (done) {
                             $('#timeline-bottom-pane').click();
 
-                            setTimeout(function() {
+                            microsecondSetTimeout(function() {
                                 expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
                                     reduceTestedAgesByTestSpeedDivisor(4) + ', Chip learned to ride a bike');
 
@@ -183,7 +200,7 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
                             ', Chip turned 42 years old"', function (done) {
                             $('#timeline-bottom-pane').click();
 
-                            setTimeout(function() {
+                            microsecondSetTimeout(function() {
                                 expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
                                     reduceTestedAgesByTestSpeedDivisor(42) + ', Chip turned 42 years old');
 
@@ -198,7 +215,7 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
                             $('#timeline-bottom-pane').click();
 
                             // wait 100 seconds
-                            setTimeout(function() {
+                            microsecondSetTimeout(function() {
                                 expect($('#timeline-bottom-pane-text').text()).to.equal('restart');
 
                                 done();
@@ -213,12 +230,12 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
                             $('#timeline-bottom-pane').click();
 
                             // wait 100 seconds
-                            setTimeout(function() {
+                            microsecondSetTimeout(function() {
                                 // click restart
                                 $('#timeline-bottom-pane').click();
 
                                 // wait 2 seconds
-                                setTimeout(function() {
+                                microsecondSetTimeout(function() {
                                     expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
                                         reduceTestedAgesByTestSpeedDivisor(0) + ', Chip was born');
                                     done();

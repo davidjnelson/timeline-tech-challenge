@@ -80,6 +80,9 @@ tdd using "red, green, refactor", but ran out of time before the refactor stage.
 - see if there's an opportunity to split another class out of TimelineModel.  it's getting too big.
 - get the unit and integration tests running in under 200 milliseconds.  use requestAnimationFrame in the tests
 themselves too, because setInterval is not precise enough there either.
+- figure out why karma, when in watch mode, does not pass the tests 100% of the time.  when run from the browser in
+the debug view, it works 100% of the time.  After restarting karma, it fixes it.  When karma is run in
+continuous integration mode, where it starts chrome and karma each time it runs the tests, they pass 100% of the time.
 
 ## Notes
 - I wanted to write this in es6 and cross compile it with traceur, but I felt that was outside the scope of the
