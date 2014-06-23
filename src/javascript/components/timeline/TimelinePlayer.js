@@ -4,25 +4,27 @@ define([], function() {
     var _timelineData,
         _modelEventHandler,
         _currentEventAge = 0,
-        _howManySecondsAfterPageLoadDidLastPauseOccur = 0,
-        _howManySecondsAfterPageLoadDidLastResumeOccur = 0,
-        _howManySecondsAfterPageLoadDidLastPlayOccur = 0,
-        _timeAtFirstPlay = 0,
-        _howLongAnimationWasPaused = 0,
+        _lastPauseOrEventChangeTime = 0,
+        _lastResumeTime = 0,
+        _lastPlayTime = 0,
+        _firstPlayTime = 0,
+        _animationPauseTime = 0,
         _playerState,
         _currentTimeInSeconds = function() {
             return performance.now() / 1000;
         },
         _calculateHowLongAnimationWasPaused = function() {
-            if(_howManySecondsAfterPageLoadDidLastResumeOccur > _howManySecondsAfterPageLoadDidLastPauseOccur) {
-                _howLongAnimationWasPaused = _howManySecondsAfterPageLoadDidLastResumeOccur - _howManySecondsAfterPageLoadDidLastPauseOccur;
+            if(_lastResumeTime > _lastPauseOrEventChangeTime) {
+                return _lastResumeTime - _lastPauseOrEventChangeTime;
             }
+
+            return 0;
         },
         _calculateAnimationElapsedTime = function() {
-            return _currentTimeInSeconds() - _howLongAnimationWasPaused - _timelineData.getAnimationStartTimeByAge(_currentEventAge);
+            return _currentTimeInSeconds() - _animationPauseTime - _timelineData.getAnimationStartTimeByAge(_currentEventAge);
         },
         _shouldMoveToNextevent = function() {
-            _calculateHowLongAnimationWasPaused();
+            _animationPauseTime = _calculateHowLongAnimationWasPaused();
 
             // convert to seconds, but keep the microsecond precision
             var howLongToShowEvent = _timelineData.getPlaybackTimeForAge(_currentEventAge),
@@ -68,8 +70,8 @@ define([], function() {
                 switch(_playerState) {
                     case TimelinePlayer.prototype.NOT_STARTED:
                     case TimelinePlayer.prototype.COMPLETED: {
-                        _timeAtFirstPlay = _currentTimeInSeconds();
-                        _howManySecondsAfterPageLoadDidLastPlayOccur = _currentTimeInSeconds();
+                        _firstPlayTime = _currentTimeInSeconds();
+                        _lastPlayTime = _currentTimeInSeconds();
                         _currentEventAge = _timelineData.getEventAgeByIndex(0);
                         _timelineData.setAnimationStartTimeByAge(_currentEventAge, _currentTimeInSeconds());
                     }
@@ -77,18 +79,19 @@ define([], function() {
             }
             case TimelinePlayer.prototype.PAUSED: {
                 if(_playerState === TimelinePlayer.prototype.PLAYING) {
-                    _howManySecondsAfterPageLoadDidLastPauseOccur = _currentTimeInSeconds();
+                    _lastPauseOrEventChangeTime = _currentTimeInSeconds();
                 }
             }
         }
 
         if(_playerState === TimelinePlayer.prototype.PAUSED) {
-            _howManySecondsAfterPageLoadDidLastResumeOccur = _currentTimeInSeconds();
+            _lastResumeTime = _currentTimeInSeconds();
         }
 
         _playerState = requestedState;
 
         if(requestedState === TimelinePlayer.prototype.PLAYING) {
+            _animationPauseTime = 0;
             _startTimer();
         }
 
@@ -109,8 +112,7 @@ define([], function() {
             } else if (_timelineData.getEvents()[i].age === _currentEventAge) {
                 _currentEventAge = _timelineData.getEvents()[i + 1].age;
                 _timelineData.setAnimationStartTimeByAge(_currentEventAge, _currentTimeInSeconds());
-                _howLongAnimationWasPaused = 0;
-                _howManySecondsAfterPageLoadDidLastPauseOccur = _currentTimeInSeconds();
+                _lastPauseOrEventChangeTime = _currentTimeInSeconds();
                 return true;
             }
         }
