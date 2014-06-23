@@ -7,7 +7,6 @@ define([], function() {
         _lastPauseOrEventChangeTime = 0,
         _lastResumeTime = 0,
         _lastPlayTime = 0,
-        _firstPlayTime = 0,
         _animationPauseTime = 0,
         _playerState,
         _currentTimeInSeconds = function() {
@@ -70,7 +69,6 @@ define([], function() {
                 switch(_playerState) {
                     case TimelinePlayer.prototype.NOT_STARTED:
                     case TimelinePlayer.prototype.COMPLETED: {
-                        _firstPlayTime = _currentTimeInSeconds();
                         _lastPlayTime = _currentTimeInSeconds();
                         _currentEventAge = _timelineData.getEventAgeByIndex(0);
                         _timelineData.setAnimationStartTimeByAge(_currentEventAge, _currentTimeInSeconds());
