@@ -63,14 +63,15 @@ mitigated for it to be a successful approach.
 - make chrome launch for the local functional tests instead of launching firefox
 - make specs not need to end in Spec.js
 - share requirejs paths between test-main and main.js
-- consider adding tests for horizontally centered the two text nodes
+- add tests for horizontally centering the two text nodes
 - add media queries and/or javascript to adjust the font sizes as the viewport shrinks and expands, for mobile especially
-- add a test for the mouse cursor to turn into the hand icon when you roll over the action button
+- add an integration test for the mouse cursor to turn into the hand icon when you roll over the action button
 - fix functional test watch - was working before...
 - add integration test for click color changing
-- write an ajax service to fetch the json instead of inlining it during the build using the requirejs text plugin.
-    in the ajax service, include a loading indicator, error handling with retry, with integration tests for both.
-- get the unit and integration tests running in under 200 milliseconds.
+- write an ajax service to fetch the json.  currently if a requirejs build was setup, it would be inlined
+ into the build output file during the build using the requirejs text plugin.  in the ajax service, include a
+ loading indicator, error handling with retry, with integration tests for both.
+- get the unit and integration tests running in under 200 milliseconds.  currently at 4 seconds.
 - figure out why karma, when in watch mode, does not pass the tests 100% of the time.  when run from the browser in
 the debug view, it works 100% of the time.  After restarting karma, it fixes it.  When karma is run in
 continuous integration mode, where it starts chrome and karma each time it runs the tests, they pass 100% of the time.
