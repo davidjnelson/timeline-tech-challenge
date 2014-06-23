@@ -41,7 +41,7 @@ Make sure not to open any other tabs in the window that karma is running in, or 
 ## Debugging integration tests in a browser
 In a different browser window than the one karma is running in, type this in the browser:
 ```
-http://localhost:9877/debug.html
+http://localhost:9876/debug.html
 ```
 It is _very_ important not to open any other tabs in the window karma is running in, or the tests will run slowly.
 
