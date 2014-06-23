@@ -74,6 +74,8 @@ mitigated for it to be a successful approach.
 - figure out why karma, when in watch mode, does not pass the tests 100% of the time.  when run from the browser in
 the debug view, it works 100% of the time.  After restarting karma, it fixes it.  When karma is run in
 continuous integration mode, where it starts chrome and karma each time it runs the tests, they pass 100% of the time.
+- make the functional tests against sauce labs work. they were working at one point.  may need to install sauce connect
+or use it to test apps deployed on the internet.
 
 ## Notes
 - I wanted to write this in es6 and cross compile it with traceur, but I felt that was outside the scope of the
