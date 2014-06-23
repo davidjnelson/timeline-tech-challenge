@@ -72,8 +72,6 @@ has value.  However, the learning curve must be mitigated for it to be a success
 - use more precision for the floating point numbers used during testing
 - write an ajax service to fetch the json instead of inlining it during the build using the requirejs text plugin.
     in the ajax service, include a loading indicator, error handling with retry, with integration tests for both.
-- write integration tests for: when play resumes, only the delta of the playback time for that event minus the elapsed
-time for that event is animated
 - consider make getTotalPlaybackTime private.  go through all code and looks for methods which should be private.
 - review all the code, look for ways to clean it up further and simplify it.  short on time so haven't had the chance
 to do that enough.

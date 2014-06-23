@@ -13,6 +13,13 @@ define([], function() {
         _needToProcessPause = false,
         _howLongAnimationWasPaused = 0,
         _playerState,
+        _safeParseJson = function(json) {
+            if(typeof json === 'object') {
+                return json;
+            }
+
+            return JSON.parse(json);
+        },
         _currentTimeInSeconds = function() {
             return performance.now() / 1000;
         },
@@ -115,7 +122,7 @@ define([], function() {
             _needToProcessPause = false,
             _howLongAnimationWasPaused = 0,
             _playerState = TimelineModel.prototype.NOT_STARTED;
-            _timelineModel = JSON.parse(timelineServerData);
+            _timelineModel = _safeParseJson(timelineServerData);
             _processedEvents = _calculatePlaybackTimeForEachAge();
         };
 

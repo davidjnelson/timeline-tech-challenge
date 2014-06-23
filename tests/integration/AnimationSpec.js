@@ -1,14 +1,31 @@
 define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], function(Data, TestTools, chai, $) {
     var expect = chai.expect,
+        // divide the ages and milliseconds to run to make the tests run faster
+        testSpeedDivisor = 100,
+        reduceTestDataByTestSpeedDivisor = function() {
+            Data = JSON.parse(Data);
+
+            Data.age = Data.age / testSpeedDivisor;
+
+            for(var i = 0; i < Data.events.length; i++) {
+                Data.events[i].age = Data.events[i].age / testSpeedDivisor
+            }
+        },
+        // the tests are doing string comparisons
+        reduceTestedAgesByTestSpeedDivisor = function(testAge) {
+            return (testAge / testSpeedDivisor).toString();
+        },
         secondsToMilliseconds = function(seconds) {
-            return seconds * 1000;
+            return seconds * 1000  / testSpeedDivisor;
         },
         secondsToMillisecondsFormatted = function(seconds) {
             return secondsToMilliseconds(seconds).toString() + ' milliseconds';
         };
 
+    reduceTestDataByTestSpeedDivisor();
+
     describe('Animation', function () {
-        this.timeout(secondsToMilliseconds(110));
+        this.timeout(100000);
 
         beforeEach(function(done) {
             TestTools.loadTestFixtures(Data, function() {
@@ -28,9 +45,9 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
                 });
 
                 describe('the top pane text', function() {
-                    it('should say: "at age 0, Chip was born"', function () {
+                    it('should say: "at age ' + reduceTestedAgesByTestSpeedDivisor(0) + ', Chip was born"', function () {
                         $('#timeline-bottom-pane').click();
-                        expect($('#timeline-top-pane-text').text()).to.equal('at age 0, Chip was born');
+                        expect($('#timeline-top-pane-text').text()).to.equal('at age ' + reduceTestedAgesByTestSpeedDivisor(0) + ', Chip was born');
                     });
                 });
 
@@ -40,7 +57,7 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
                             describe('the play button is clicked', function() {
                                 describe('after ' + secondsToMillisecondsFormatted(8), function() {
                                     describe('the top pane text', function() {
-                                        it('should say: "at age 4, Chip learned to ride a bike"', function (done) {
+                                        it('should say: "at age ' + reduceTestedAgesByTestSpeedDivisor(4) + ', Chip learned to ride a bike"', function (done) {
                                             // the first event should display for 8000 milliseconds
                                             // the second event should display for 16000 milliseconds
 
@@ -59,11 +76,12 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
 
                                                     // wait 8000 milliseconds
                                                     setTimeout(function() {
-                                                        expect($('#timeline-top-pane-text').text()).to.equal('at age 4, Chip learned to ride a bike');
+                                                        expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
+                                                            reduceTestedAgesByTestSpeedDivisor(4) + ', Chip learned to ride a bike');
                                                         done();
-                                                    }, 8000);
-                                                }, 20000);
-                                            }, 10000);
+                                                    }, secondsToMilliseconds(8));
+                                                }, secondsToMilliseconds(20));
+                                            }, secondsToMilliseconds(10));
                                         });
                                     });
                                 });
@@ -89,7 +107,7 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
 
                         describe('after  ' + secondsToMillisecondsFormatted(10), function() {
                             describe('the top pane text', function() {
-                                it('should say: "at age 0, Chip was born"', function (done) {
+                                it('should say: "at age ' + reduceTestedAgesByTestSpeedDivisor(0) + ', Chip was born"', function (done) {
                                     // this should play for 2,000 milliseconds, then pause
                                     // then wait for 10,000 milliseconds
 
@@ -103,7 +121,8 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
 
                                         // wait 10,000 milliseconds
                                         setTimeout(function () {
-                                            expect($('#timeline-top-pane-text').text()).to.equal('at age 0, Chip was born');
+                                            expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
+                                                reduceTestedAgesByTestSpeedDivisor(0) + ', Chip was born');
                                             done();
                                         },  secondsToMilliseconds(10));
                                     },  secondsToMilliseconds(2));
@@ -112,7 +131,8 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
 
                             describe('the play button is clicked', function() {
                                 describe('after ' + secondsToMillisecondsFormatted(8), function() {
-                                    it('should say: "at age 4, Chip learned to ride a bike"', function (done) {
+                                    it('should say: "at age ' + reduceTestedAgesByTestSpeedDivisor(4) + ', ' +
+                                        'Chip learned to ride a bike"', function (done) {
                                         // click play
                                         $('#timeline-bottom-pane').click();
 
@@ -128,7 +148,8 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
 
                                                 // wait 8 seconds.  second animation triggered 2 seconds ago.
                                                 setTimeout(function() {
-                                                    expect($('#timeline-top-pane-text').text()).to.equal('at age 4, Chip learned to ride a bike');
+                                                    expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
+                                                        reduceTestedAgesByTestSpeedDivisor(4) + ', Chip learned to ride a bike');
                                                     done();
                                                 }, secondsToMilliseconds(8));
                                             }, secondsToMilliseconds(10));
@@ -142,11 +163,13 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
 
                 describe('after ' + secondsToMillisecondsFormatted(10), function () {
                     describe('the top pane text', function () {
-                        it('should say: "at age 4, Chip learned to ride a bike"', function (done) {
+                        it('should say: "at age ' + reduceTestedAgesByTestSpeedDivisor(4) +
+                            ', Chip learned to ride a bike"', function (done) {
                             $('#timeline-bottom-pane').click();
 
                             setTimeout(function() {
-                                expect($('#timeline-top-pane-text').text()).to.equal('at age 4, Chip learned to ride a bike');
+                                expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
+                                    reduceTestedAgesByTestSpeedDivisor(4) + ', Chip learned to ride a bike');
 
                                 done();
                             }, secondsToMilliseconds(10));
@@ -156,11 +179,13 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
 
                 describe('after ' + secondsToMillisecondsFormatted(100), function () {
                     describe('the top pane text', function () {
-                        it('should say: "at age 42, Chip turned 42 years old"', function (done) {
+                        it('should say: "at age ' + reduceTestedAgesByTestSpeedDivisor(42) +
+                            ', Chip turned 42 years old"', function (done) {
                             $('#timeline-bottom-pane').click();
 
                             setTimeout(function() {
-                                expect($('#timeline-top-pane-text').text()).to.equal('at age 42, Chip turned 42 years old');
+                                expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
+                                    reduceTestedAgesByTestSpeedDivisor(42) + ', Chip turned 42 years old');
 
                                 done();
                             }, secondsToMilliseconds(100));
@@ -182,7 +207,8 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
                     });
 
                     describe('after clicking the restart button, the top pane text', function() {
-                        it('should say: "at age 0, Chip was born"', function(done) {
+                        it('should say: "at age ' + reduceTestedAgesByTestSpeedDivisor(0) +
+                            ', Chip was born"', function(done) {
                             // click play
                             $('#timeline-bottom-pane').click();
 
@@ -193,7 +219,8 @@ define(['text!json/TimelineData.json', 'testing/TestTools', 'chai', 'jquery'], f
 
                                 // wait 2 seconds
                                 setTimeout(function() {
-                                    expect($('#timeline-top-pane-text').text()).to.equal('at age 0, Chip was born');
+                                    expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
+                                        reduceTestedAgesByTestSpeedDivisor(0) + ', Chip was born');
                                     done();
                                 }, secondsToMilliseconds(2));
                             }, secondsToMilliseconds(100));
