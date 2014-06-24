@@ -1,7 +1,10 @@
 'use strict';
 
-define(['text!components/timeline/TimelineViewTemplate.html', 'shared/MicrosecondTimer', 'jquery'], function(TimelineViewTemplate, MicrosecondTimer, $) {
-    var _timelinePlayer,
+define(['text!components/timeline/TimelineViewTemplate.html', 'shared/MicrosecondTimer',
+    'components/timeline/TimelinePlayerState', 'jquery'], function(TimelineViewTemplate, MicrosecondTimer,
+        TimelinePlayerState, $) {
+    var _timelinePlayerState,
+        _timelinePlayer,
         _timelineData,
         _parentElement,
         _templatedRendered = false,
@@ -25,29 +28,29 @@ define(['text!components/timeline/TimelineViewTemplate.html', 'shared/Microsecon
             }
         },
         _getBottomPaneText = function() {
-            switch(_timelinePlayer.getPlayerState()) {
-                case _timelinePlayer.NOT_STARTED:
-                case _timelinePlayer.PAUSED: {
+            switch(_timelinePlayerState.getPlayerState()) {
+                case TimelinePlayerState.prototype.NOT_STARTED:
+                case TimelinePlayerState.prototype.PAUSED: {
                     return 'play';
                 }
-                case _timelinePlayer.PLAYING: {
+                case TimelinePlayerState.prototype.PLAYING: {
                     return 'pause';
                 }
-                case _timelinePlayer.COMPLETED: {
+                case TimelinePlayerState.prototype.COMPLETED: {
                     return 'restart';
                 }
             }
         },
         _getTopPaneText = function() {
-            switch(_timelinePlayer.getPlayerState()) {
-                case _timelinePlayer.PLAYING:
-                case _timelinePlayer.COMPLETED:
-                case _timelinePlayer.PAUSED: {
-                    return 'at age ' + _timelinePlayer.getCurrentEventAge() + ', ' + _timelineData.getFirstName() + ' ' +
-                        _timelineData.getActivityForAge(_timelinePlayer.getCurrentEventAge());
+            switch(_timelinePlayerState.getPlayerState()) {
+                case TimelinePlayerState.prototype.PLAYING:
+                case TimelinePlayerState.prototype.COMPLETED:
+                case TimelinePlayerState.prototype.PAUSED: {
+                    return 'at age ' + _timelinePlayerState.currentEventAge + ', ' + _timelineData.firstName + ' ' +
+                        _timelinePlayerState.currentActivity;
                 }
-                case _timelinePlayer.NOT_STARTED: {
-                    return _timelineData.getFullName();
+                case TimelinePlayerState.prototype.NOT_STARTED: {
+                    return _timelineData.fullName;
                 }
             }
         },
@@ -63,18 +66,20 @@ define(['text!components/timeline/TimelineViewTemplate.html', 'shared/Microsecon
         _wireBottomPaneClick = function() {
             $('#timeline-bottom-pane').click(function () {
                 _timelinePlayer.togglePlayingPaused();
-                _showclickedAnimation();
+                // having some issues using multiple requestanimationframe's currently.  debug later.
+                //_showclickedAnimation();
             });
         },
         _handleModelEvents = function(eventData) {
             _updateTemplate();
         },
-        TimelineView = function (parentElement, timelinePlayer, loadedEventHandler, timelineData) {
-            _timelinePlayer = timelinePlayer;
+        TimelineView = function (parentElement, timelinePlayerState, loadedEventHandler, timelineData, timelinePlayer) {
+            _timelinePlayerState = timelinePlayerState;
             _parentElement = parentElement;
-            _timelinePlayer.handleModelEvents(_handleModelEvents);
+            _timelinePlayerState.setStateChangedEventHandler(_handleModelEvents);
             _loadedEventHandler = loadedEventHandler;
             _timelineData = timelineData;
+            _timelinePlayer = timelinePlayer;
         };
 
     TimelineView.prototype.render = function() {

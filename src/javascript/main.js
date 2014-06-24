@@ -12,7 +12,6 @@ requirejs.config({
     }
 });
 
-// TODO: make data come from a real service after writing a test for it
 define(['EntryPoint', 'text!components/timeline/TimelineData.json'], function (EntryPoint, TimelineData) {
     EntryPoint.start(TimelineData);
 });

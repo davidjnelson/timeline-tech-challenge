@@ -5,8 +5,12 @@ define([], function () {
     var _completedCallback,
         _millisecondsToWait,
         _millisecondsSinceTimerStarted,
+        _millisecondsSinceTimerEnded,
+        _stop = false,
         _timerLoop = function (millisecondsSincePageLoaded) {
-            if (performance.now() >= (_millisecondsSinceTimerStarted + _millisecondsToWait)) {
+            if(_stop) {
+                return;
+            } else if (performance.now() >= (_millisecondsSinceTimerStarted + _millisecondsToWait)) {
                 _completedCallback();
             } else {
                 requestAnimationFrame(_timerLoop);
@@ -19,10 +23,19 @@ define([], function () {
     var MicrosecondTimer = function (completedCallback, millisecondsToWait) {
         _completedCallback = completedCallback;
         _millisecondsToWait = millisecondsToWait;
+        _millisecondsSinceTimerStarted = 0;
+        _stop = false;
     };
 
     MicrosecondTimer.prototype.execute = function() {
         _microsecondSetTimeout(_completedCallback, _millisecondsToWait);
+    };
+
+    MicrosecondTimer.prototype.stop = function() {
+        var timeBetweenTimerStartAndStop = performance.now() - _millisecondsSinceTimerStarted;
+        _stop = true;
+
+        return timeBetweenTimerStartAndStop;
     };
 
     return MicrosecondTimer;

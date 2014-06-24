@@ -68,23 +68,25 @@ define(['text!components/timeline/TimelineData.json', 'testing/TestTools', 'shar
                                             $('#timeline-bottom-pane').click();
 
                                             // wait 10,0000 milliseconds
-                                            new MicrosecondTimer(function() {
+                                            // having some issues using multiple requestanimationframe's currently.  debug later.
+                                            // back to set timeout for now
+                                            setTimeout(function() {
                                                 // click pause
                                                 $('#timeline-bottom-pane').click();
 
                                                 // wait 20,0000 milliseconds
-                                                new MicrosecondTimer(function () {
+                                                setTimeout(function () {
                                                     // click play
                                                     $('#timeline-bottom-pane').click();
 
                                                     // wait 8000 milliseconds
-                                                    new MicrosecondTimer(function() {
+                                                    setTimeout(function() {
                                                         expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
                                                             reduceTestedAgesByTestSpeedDivisor(4) + ', Chip learned to ride a bike');
                                                         done();
-                                                    }, secondsToMilliseconds(8)).execute();
-                                                }, secondsToMilliseconds(20)).execute();
-                                            }, secondsToMilliseconds(10)).execute();
+                                                    }, secondsToMilliseconds(8));
+                                                }, secondsToMilliseconds(20));
+                                            }, secondsToMilliseconds(10));
                                         });
                                     });
                                 });
@@ -99,12 +101,12 @@ define(['text!components/timeline/TimelineData.json', 'testing/TestTools', 'shar
                             it('should change to the word: "play"', function (done) {
                                 $('#timeline-bottom-pane').click();
 
-                                new MicrosecondTimer(function () {
+                                setTimeout(function () {
                                     $('#timeline-bottom-pane').click();
 
                                     expect($('#timeline-bottom-pane-text').text()).to.equal('play');
                                     done();
-                                }, secondsToMilliseconds(2)).execute();
+                                }, secondsToMilliseconds(2));
                             });
                         });
 
@@ -118,17 +120,17 @@ define(['text!components/timeline/TimelineData.json', 'testing/TestTools', 'shar
                                     $('#timeline-bottom-pane').click();
 
                                     // wait 2,000 milliseconds
-                                    new MicrosecondTimer(function() {
+                                    setTimeout(function() {
                                         // click pause
                                         $('#timeline-bottom-pane').click();
 
                                         // wait 10,000 milliseconds
-                                        new MicrosecondTimer(function () {
+                                        setTimeout(function () {
                                             expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
                                                 reduceTestedAgesByTestSpeedDivisor(0) + ', Chip was born');
                                             done();
-                                        },  secondsToMilliseconds(10)).execute();
-                                    },  secondsToMilliseconds(2)).execute();
+                                        },  secondsToMilliseconds(10));
+                                    },  secondsToMilliseconds(2));
                                 });
                             });
 
@@ -140,23 +142,23 @@ define(['text!components/timeline/TimelineData.json', 'testing/TestTools', 'shar
                                         $('#timeline-bottom-pane').click();
 
                                         // wait 2 seconds
-                                        new MicrosecondTimer(function() {
+                                        setTimeout(function() {
                                             // click pause.  6 seconds remaining for the first animation.
                                             $('#timeline-bottom-pane').click();
 
                                             // wait 10 seconds.  still 6 seconds remaining for the first animation.
-                                            new MicrosecondTimer(function () {
+                                            setTimeout(function () {
                                                 // click play
                                                 $('#timeline-bottom-pane').click();
 
                                                 // wait 8 seconds.  second animation triggered 2 seconds ago.
-                                                new MicrosecondTimer(function() {
+                                                setTimeout(function() {
                                                     expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
                                                         reduceTestedAgesByTestSpeedDivisor(4) + ', Chip learned to ride a bike');
                                                     done();
-                                                }, secondsToMilliseconds(8)).execute();
-                                            }, secondsToMilliseconds(10)).execute();
-                                        }, secondsToMilliseconds(2)).execute();
+                                                }, secondsToMilliseconds(8));
+                                            }, secondsToMilliseconds(10));
+                                        }, secondsToMilliseconds(2));
                                     });
                                 });
                             });
@@ -170,12 +172,12 @@ define(['text!components/timeline/TimelineData.json', 'testing/TestTools', 'shar
                             ', Chip learned to ride a bike"', function (done) {
                             $('#timeline-bottom-pane').click();
 
-                            new MicrosecondTimer(function() {
+                            setTimeout(function() {
                                 expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
                                     reduceTestedAgesByTestSpeedDivisor(4) + ', Chip learned to ride a bike');
 
                                 done();
-                            }, secondsToMilliseconds(10)).execute();
+                            }, secondsToMilliseconds(10));
                         });
                     });
                 });
@@ -186,12 +188,12 @@ define(['text!components/timeline/TimelineData.json', 'testing/TestTools', 'shar
                             ', Chip turned 42 years old"', function (done) {
                             $('#timeline-bottom-pane').click();
 
-                            new MicrosecondTimer(function() {
+                            setTimeout(function() {
                                 expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
                                     reduceTestedAgesByTestSpeedDivisor(42) + ', Chip turned 42 years old');
 
                                 done();
-                            }, secondsToMilliseconds(100)).execute();
+                            }, secondsToMilliseconds(100));
                         });
                     });
 
@@ -201,11 +203,11 @@ define(['text!components/timeline/TimelineData.json', 'testing/TestTools', 'shar
                             $('#timeline-bottom-pane').click();
 
                             // wait 100 seconds
-                            new MicrosecondTimer(function() {
+                            setTimeout(function() {
                                 expect($('#timeline-bottom-pane-text').text()).to.equal('restart');
 
                                 done();
-                            }, secondsToMilliseconds(100)).execute();
+                            }, secondsToMilliseconds(100));
                         });
                     });
 
@@ -216,17 +218,17 @@ define(['text!components/timeline/TimelineData.json', 'testing/TestTools', 'shar
                             $('#timeline-bottom-pane').click();
 
                             // wait 100 seconds
-                            new MicrosecondTimer(function() {
+                            setTimeout(function() {
                                 // click restart
                                 $('#timeline-bottom-pane').click();
 
                                 // wait 2 seconds
-                                new MicrosecondTimer(function() {
+                                setTimeout(function() {
                                     expect($('#timeline-top-pane-text').text()).to.equal('at age ' +
                                         reduceTestedAgesByTestSpeedDivisor(0) + ', Chip was born');
                                     done();
-                                }, secondsToMilliseconds(2)).execute();
-                            }, secondsToMilliseconds(100)).execute();
+                                }, secondsToMilliseconds(2));
+                            }, secondsToMilliseconds(100));
                         });
                     });
                 });
